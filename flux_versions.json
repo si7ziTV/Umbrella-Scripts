@@ -1,0 +1,14 @@
+{
+  "[flux].lua": {
+    "version": "1.0.0",
+    "url": "https://raw.githubusercontent.com/si7ziTV/Umbrella-Scripts/main/Scripts/%5Bflux%5D.lua"
+  },
+  "[flux]targetselector.lua": {
+    "version": "1.0.0",
+    "url": "https://raw.githubusercontent.com/si7ziTV/Umbrella-Scripts/main/Libraries/%5Bflux%5Dtargetselector.lua"
+  },
+  "[flux]aimbot.lua": {
+    "version": "1.0.0",
+    "url": "https://raw.githubusercontent.com/si7ziTV/Umbrella-Scripts/main/Libraries/%5Bflux%5Daimbot.lua"
+  }
+}
