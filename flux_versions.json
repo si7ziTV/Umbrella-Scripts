@@ -1,14 +1,17 @@
 {
   "[flux].lua": {
-    "version": "1.0.0",
-    "url": "https://raw.githubusercontent.com/si7ziTV/Umbrella-Scripts/main/Scripts/%5Bflux%5D.lua"
+    "version": "1.0.1",
+    "url": "https://raw.githubusercontent.com/si7ziTV/Umbrella-Scripts/main/Scripts/%5Bflux%5D.lua",
+    "last_updated": "08.08.2026, 14:30:05"
   },
   "[flux]targetselector.lua": {
-    "version": "1.0.0",
-    "url": "https://raw.githubusercontent.com/si7ziTV/Umbrella-Scripts/main/Libraries/%5Bflux%5Dtargetselector.lua"
+    "version": "1.0.1",
+    "url": "https://raw.githubusercontent.com/si7ziTV/Umbrella-Scripts/main/Libraries/%5Bflux%5Dtargetselector.lua",
+    "last_updated": "08.08.2026, 14:30:05"
   },
   "[flux]aimbot.lua": {
-    "version": "1.0.0",
-    "url": "https://raw.githubusercontent.com/si7ziTV/Umbrella-Scripts/main/Libraries/%5Bflux%5Daimbot.lua"
+    "version": "1.0.1",
+    "url": "https://raw.githubusercontent.com/si7ziTV/Umbrella-Scripts/main/Libraries/%5Bflux%5Daimbot.lua",
+    "last_updated": "08.08.2026, 14:30:05"
   }
 }
