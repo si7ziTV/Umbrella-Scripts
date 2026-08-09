@@ -1,7 +1,11 @@
 -- ════════════════════════════════════════════════════════════════════════════════
--- [flux]aimbot.lua — _VERSION 1.0.1
+-- [flux]aimbot.lua — _VERSION 1.0.2
 -- ════════════════════════════════════════════════════════════════════════════════
 
+-- 1.0.0		release flux auto-update skeleton ([flux].lua + libs + manifest)
+-- 1.0.1		added Deadlock-native update stack (http.request, utils.reload_scripts, package.path dir detection), jsDelivr CDN fallback, lifecycle prints, debugprint
+-- 1.0.2		updater simplified to self-only (standalone-library safe: no longer pulls sibling
+--			files); aimbot logic (magnet/legitbot/psilent) deferred to a later phase
 
 -- ════════════════════════════════════════════════════════════════════════════════
 -- Utilities
@@ -9,27 +13,35 @@
 
 local function debugprint(...)
 	local ok, w = pcall(Menu.Find, "SettingsHidden", "", "", "", "Main", "Developer Mode")
-	if ok and w and w:Get() then print(...) end
+	if ok and w and w:Get() then
+		print(...)
+	end
 end
 
-
 -- ════════════════════════════════════════════════════════════════════════════════
--- Auto Update
+-- Auto Update (self-only)
 -- ════════════════════════════════════════════════════════════════════════════════
+-- Library file, not an entry point: never pulls sibling files. Keeps only ITSELF current
+-- against the manifest, so it self-updates inside flux AND standalone (someone using just
+-- this lib in their own project gets its updates without [flux].lua or other flux files
+-- appearing). [flux].lua (the entry) is responsible for downloading it initially.
 
-local _VERSION  = "1.0.1"
+local _VERSION  = "1.0.2"
 local FILE_NAME = "[flux]aimbot.lua"
 local TAG       = "flux-aimbot"
 local ROOT      = "https://raw.githubusercontent.com/si7ziTV/Umbrella-Scripts/main"
 local MANIFEST  = "flux_versions.json"
-local PUBLIC    = { "[flux].lua", "[flux]targetselector.lua", "[flux]aimbot.lua" }
 local json      = require("assets.JSON")
 
 local SCRIPTS = ""
 for entry in (package.path or ""):gmatch("[^;]+") do
 	local dir = entry:gsub("%?.-$", "")
 	local f = dir ~= "" and io.open(dir .. FILE_NAME, "r") or nil
-	if f then f:close() SCRIPTS = dir break end
+	if f then
+		f:close()
+		SCRIPTS = dir
+		break
+	end
 end
 
 
@@ -65,9 +77,13 @@ local function fetch(url, cb)
 end
 
 local function save(name, body)
-	if not body or body:sub(1, 2) ~= "--" then return false end
+	if not body or body:sub(1, 2) ~= "--" then
+		return false
+	end
 	local f = io.open(SCRIPTS .. name, "w")
-	if not f then return false end
+	if not f then
+		return false
+	end
 	f:write(body)
 	f:close()
 	return true
@@ -76,7 +92,10 @@ end
 -- Fetches + decodes the manifest. cb receives the table or nil.
 local function manifest(cb)
 	fetch(ROOT .. "/" .. MANIFEST, function(body)
-		if not body then cb(nil) return end
+		if not body then
+			cb(nil)
+			return
+		end
 		local ok, m = pcall(function() return json:decode(body) end)
 		cb(ok and type(m) == "table" and m or nil)
 	end)
@@ -84,59 +103,24 @@ end
 
 
 -- ────────────────────────────────────────────────────────────────────────────────
--- Update Logic
+-- Update Logic (self-only)
 -- ────────────────────────────────────────────────────────────────────────────────
 
 local function run()
-	local miss = {}
-	for _, n in ipairs(PUBLIC) do
-		if n ~= FILE_NAME then
-			local f = io.open(SCRIPTS .. n, "r")
-			if f then f:close() else miss[#miss + 1] = n end
-		end
-	end
-
-	if #miss > 0 then
-		print(TAG .. " v" .. _VERSION .. " loaded — downloading " .. #miss .. " missing file(s)…")
-	end
-
-	-- One manifest fetch serves both branches: bootstrap missing files, else self-update.
 	manifest(function(m)
-		if not m then print(TAG .. " ✗ manifest unreachable") return end
-
-		if #miss > 0 then
-			local downloads = {}
-			for _, n in ipairs(miss) do
-				if type(m[n]) == "table" and m[n].url then downloads[#downloads + 1] = n end
-			end
-			if #downloads == 0 then return end
-
-			local left, done = #downloads, 0
-			for i, n in ipairs(downloads) do
-				print(TAG .. "   ↓ " .. n .. "   (" .. i .. "/" .. #downloads .. ")")
-				fetch(m[n].url, function(b)
-					if save(n, b) then
-						done = done + 1
-						print(TAG .. "   ✓ " .. n .. "   (" .. done .. "/" .. #downloads .. " ok)")
-					else
-						print(TAG .. "   ✗ " .. n .. "   (failed)")
-					end
-					left = left - 1
-					if left <= 0 and done > 0 then utils.reload_scripts() end
-				end)
-			end
+		if not m then
+			print(TAG .. " ✗ manifest unreachable")
 			return
 		end
-
 		local me = m[FILE_NAME]
-		if not (me and me.url) then return end
-
+		if not (me and me.url) then
+			return
+		end
 		local date = me.last_updated and me.last_updated:sub(1, 10) or "?"
 		if not newer(me.version, _VERSION) then
 			print(TAG .. " v" .. _VERSION .. " loaded — up to date (last updated " .. date .. ")")
 			return
 		end
-
 		local vu = tostring(me.version)
 		print(TAG .. " v" .. _VERSION .. " loaded — Update: " .. _VERSION .. " → " .. vu .. " (" .. date .. ") — downloading…")
 		fetch(me.url, function(b)
@@ -151,3 +135,12 @@ local function run()
 end
 
 pcall(run)
+
+
+-- ════════════════════════════════════════════════════════════════════════════════
+-- Aimbot (logic deferred)
+-- ════════════════════════════════════════════════════════════════════════════════
+-- Magnet (warp), Legitbot (humanized pull) and PSilent move in with a later phase. The
+-- menu settings they will read (per-channel FOV/render/color, presets, hitchance) already
+-- live in [flux]menu.lua; this lib will consume them via the flux_menu (FM) handle once its
+-- logic lands.
