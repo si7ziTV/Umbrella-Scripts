@@ -5,18 +5,18 @@
     "last_updated": "08.08.2026, 14:30:05"
   },
   "[flux]targetselector.lua": {
-    "version": "1.0.2",
+    "version": "1.0.0",
     "url": "https://raw.githubusercontent.com/si7ziTV/Umbrella-Scripts/main/Libraries/%5Bflux%5Dtargetselector.lua",
-    "last_updated": "09.08.2026, 14:37:50"
+    "last_updated": "09.08.2026, 15:48:28"
   },
   "[flux]aimbot.lua": {
-    "version": "1.0.2",
+    "version": "1.0.0",
     "url": "https://raw.githubusercontent.com/si7ziTV/Umbrella-Scripts/main/Libraries/%5Bflux%5Daimbot.lua",
-    "last_updated": "09.08.2026, 14:37:50"
+    "last_updated": "09.08.2026, 15:48:28"
   },
   "[flux]menu.lua": {
-    "version": "1.0.2",
+    "version": "1.0.0",
     "url": "https://raw.githubusercontent.com/si7ziTV/Umbrella-Scripts/main/Libraries/%5Bflux%5Dmenu.lua",
-    "last_updated": "09.08.2026, 15:02:26"
+    "last_updated": "09.08.2026, 15:48:28"
   }
 }

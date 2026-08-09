@@ -1,16 +1,8 @@
 -- ════════════════════════════════════════════════════════════════════════════════
--- [flux]menu.lua — _VERSION 1.0.2
+-- [flux]menu.lua — _VERSION 1.0.0
 -- ════════════════════════════════════════════════════════════════════════════════
 
--- 1.0.2	Security envelope consolidated into apply_security: max_headshot locked at 40 and
---			detection_delay at 100 (value forced + widget disabled) while Security is on;
---			removed the now-redundant declarative clamps from the spec
--- 1.0.1	review cleanup: dropped dead flux_menu_data.lang_widget (engine reads
---			spec.lang_widget only) and unused spec.langs (engine uses flux_menu_data.langs)
--- 1.0.0	initial — flux menu data (SPEC + i18n/tips/hides catalogs) as a self-updating
---			data file, consumed by [flux].lua's menu engine. Pure data + a self-only
---			updater; no sibling-pull. [flux].lua reads flux_menu_data on on_scripts_loaded,
---			so hero/utility scripts may append pages to flux_menu_data.spec.pages first.
+-- 1.0.0	initial — flux menu data
 
 -- ════════════════════════════════════════════════════════════════════════════════
 -- Utilities
@@ -27,7 +19,7 @@ end
 -- Auto Update
 -- ════════════════════════════════════════════════════════════════════════════════
 
-local _VERSION  = "1.0.2"
+local _VERSION  = "1.0.0"
 local FILE_NAME = "[flux]menu.lua"
 local TAG       = "flux-menu"
 local ROOT      = "https://raw.githubusercontent.com/si7ziTV/Umbrella-Scripts/main"
@@ -114,7 +106,7 @@ local function run()
 		end
 		local date = me.last_updated and me.last_updated:sub(1, 10) or "?"
 		if not newer(me.version, _VERSION) then
-			print(TAG .. " v" .. _VERSION .. " loaded — up to date (last updated " .. date .. ")")
+			debugprint(TAG .. " v" .. _VERSION .. " loaded — up to date (last updated " .. date .. ")")
 			return
 		end
 		local vu = tostring(me.version)

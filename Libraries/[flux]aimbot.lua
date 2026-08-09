@@ -1,10 +1,8 @@
 -- ════════════════════════════════════════════════════════════════════════════════
--- [flux]aimbot.lua — _VERSION 1.0.2
+-- [flux]aimbot.lua — _VERSION 1.0.0
 -- ════════════════════════════════════════════════════════════════════════════════
 
--- 1.0.2		updater simplified to self-only (standalone-library safe: no longer pulls sibling files)
--- 1.0.1		added Deadlock-native update stack (http.request, utils.reload_scripts, package.path dir detection), jsDelivr CDN fallback, lifecycle prints, debugprint
--- 1.0.0		release flux auto-update skeleton ([flux].lua + libs + manifest)
+-- 1.0.0		release flux auto-update skeleton
 
 -- ════════════════════════════════════════════════════════════════════════════════
 -- Utilities
@@ -21,7 +19,7 @@ end
 -- Auto Update
 -- ════════════════════════════════════════════════════════════════════════════════
 
-local _VERSION  = "1.0.2"
+local _VERSION  = "1.0.0"
 local FILE_NAME = "[flux]aimbot.lua"
 local TAG       = "flux-aimbot"
 local ROOT      = "https://raw.githubusercontent.com/si7ziTV/Umbrella-Scripts/main"
@@ -108,7 +106,7 @@ local function run()
 		end
 		local date = me.last_updated and me.last_updated:sub(1, 10) or "?"
 		if not newer(me.version, _VERSION) then
-			print(TAG .. " v" .. _VERSION .. " loaded — up to date (last updated " .. date .. ")")
+			debugprint(TAG .. " v" .. _VERSION .. " loaded — up to date (last updated " .. date .. ")")
 			return
 		end
 		local vu = tostring(me.version)
