@@ -1,5 +1,5 @@
 -- ════════════════════════════════════════════════════════════════════════════════
--- [flux]menu.lua — _VERSION 1.0.1
+-- [flux]menu.lua — _VERSION 1.0.2
 -- ════════════════════════════════════════════════════════════════════════════════
 
 -- 1.0.0		initial — flux menu data (SPEC + i18n/tips/hides catalogs) as a self-updating
@@ -8,6 +8,9 @@
 --			so hero/utility scripts may append pages to flux_menu_data.spec.pages first.
 -- 1.0.1		review cleanup: dropped dead flux_menu_data.lang_widget (engine reads
 --			spec.lang_widget only) and unused spec.langs (engine uses flux_menu_data.langs)
+-- 1.0.2		Security envelope consolidated into apply_security: max_headshot locked at 40 and
+--			detection_delay at 100 (value forced + widget disabled) while Security is on;
+--			removed the now-redundant declarative clamps from the spec
 
 -- ════════════════════════════════════════════════════════════════════════════════
 -- Utilities
@@ -27,7 +30,7 @@ end
 -- against the manifest, so it self-updates inside flux AND standalone. [flux].lua (the
 -- entry) downloads it initially via its REQUIREMENTS list.
 
-local _VERSION  = "1.0.1"
+local _VERSION  = "1.0.2"
 local FILE_NAME = "[flux]menu.lua"
 local TAG       = "flux-menu"
 local ROOT      = "https://raw.githubusercontent.com/si7ziTV/Umbrella-Scripts/main"
@@ -298,8 +301,8 @@ flux_menu_data.tips = {
 	render_fov = { en = "Draw the FOV cone on screen.", ru = "Рисовать конус FOV на экране." },
 	fov_color = { en = "Color of the drawn FOV cone.", ru = "Цвет рисуемого конуса FOV." },
 	security = { en = "Master switch for the safety envelope (limits and clamping).", ru = "Главный включатель защитного контура (лимиты и клампинг)." },
-	max_headshot = { en = "Highest headshot percentage the aim may use.", ru = "Максимальный процент хедшота, который может использовать прицел." },
-	detection_delay = { en = "Delay (ms) before a detected target is actually aimed at — higher reads as more human, less snap. Cannot drop below 100 while Security is on.", ru = "Задержка (мс) перед тем, как замеченная цель становится целью прицела — выше = человечнее, меньше рывка. Пока Security включён — не ниже 100." },
+	max_headshot = { en = "Highest headshot percentage the aim may use. Locked at 40 while Security is on.", ru = "Максимальный процент хедшота, который может использовать прицел. Зафиксирован на 40, пока включён Security." },
+	detection_delay = { en = "Delay (ms) before a detected target is actually aimed at — higher reads as more human, less snap. Locked at 100 while Security is on.", ru = "Задержка (мс) перед тем, как замеченная цель становится целью прицела — выше = человечнее, меньше рывка. Пока Security включён — зафиксирован на 100." },
 	dist_fov = { en = "Shrink the FOV with distance so the physical reach stays constant.", ru = "Сужать FOV с дистанцией, чтобы реальный радиус оставался постоянным." },
 	dist_fov_scale = { en = "Distance scaling strength. 1 = full, 0 = off.", ru = "Сила масштабирования по дистанции. 1 = полно, 0 = выкл." },
 	dist_fov_ref = { en = "Distance (m) at which the FOV equals its base value.", ru = "Дистанция (м), на которой FOV равен базовому." },
@@ -511,9 +514,8 @@ flux_menu_data.spec = {
 							max = 100,
 							default = 70,
 							fmt = "%d%%",
-							clamp = { when = { id = "security", value = true }, max = 40 },  -- Security envelope: cap headshot ≤ 40% while Security is on
 						},
-						{ id = "detection_delay", type = "Slider", label = "Detection Delay", min = 0, max = 250, default = 100, fmt = "%d", clamp = { when = { id = "security", value = true }, min = 100 } },
+						{ id = "detection_delay", type = "Slider", label = "Detection Delay", min = 0, max = 250, default = 100, fmt = "%d" },
 						{
 							id = "dist_fov",
 							type = "Switch",
