@@ -2,10 +2,9 @@
 -- [flux]aimbot.lua — _VERSION 1.0.2
 -- ════════════════════════════════════════════════════════════════════════════════
 
--- 1.0.0		release flux auto-update skeleton ([flux].lua + libs + manifest)
+-- 1.0.2		updater simplified to self-only (standalone-library safe: no longer pulls sibling files)
 -- 1.0.1		added Deadlock-native update stack (http.request, utils.reload_scripts, package.path dir detection), jsDelivr CDN fallback, lifecycle prints, debugprint
--- 1.0.2		updater simplified to self-only (standalone-library safe: no longer pulls sibling
---			files); aimbot logic (magnet/legitbot/psilent) deferred to a later phase
+-- 1.0.0		release flux auto-update skeleton ([flux].lua + libs + manifest)
 
 -- ════════════════════════════════════════════════════════════════════════════════
 -- Utilities
@@ -19,12 +18,8 @@ local function debugprint(...)
 end
 
 -- ════════════════════════════════════════════════════════════════════════════════
--- Auto Update (self-only)
+-- Auto Update
 -- ════════════════════════════════════════════════════════════════════════════════
--- Library file, not an entry point: never pulls sibling files. Keeps only ITSELF current
--- against the manifest, so it self-updates inside flux AND standalone (someone using just
--- this lib in their own project gets its updates without [flux].lua or other flux files
--- appearing). [flux].lua (the entry) is responsible for downloading it initially.
 
 local _VERSION  = "1.0.2"
 local FILE_NAME = "[flux]aimbot.lua"
@@ -44,12 +39,10 @@ for entry in (package.path or ""):gmatch("[^;]+") do
 	end
 end
 
-
 -- ────────────────────────────────────────────────────────────────────────────────
 -- Helpers
 -- ────────────────────────────────────────────────────────────────────────────────
 
--- "1.0.1" → 10001, "2.0.0" → 20000. Arithmetic compare instead of table+loop.
 local function newer(a, b)
 	local function n(v)
 		local x, y, z = tostring(v):match("(%d+)%.(%d+)%.(%d+)")
@@ -58,7 +51,6 @@ local function newer(a, b)
 	return n(a) > n(b)
 end
 
--- HTTP GET with jsDelivr fallback. cb receives body or nil.
 local function fetch(url, cb)
 	debugprint("[flux-dbg] GET " .. url:sub(1, 120))
 	local function req(u, is_fb)
@@ -89,7 +81,6 @@ local function save(name, body)
 	return true
 end
 
--- Fetches + decodes the manifest. cb receives the table or nil.
 local function manifest(cb)
 	fetch(ROOT .. "/" .. MANIFEST, function(body)
 		if not body then
@@ -101,9 +92,8 @@ local function manifest(cb)
 	end)
 end
 
-
 -- ────────────────────────────────────────────────────────────────────────────────
--- Update Logic (self-only)
+-- Update Logic
 -- ────────────────────────────────────────────────────────────────────────────────
 
 local function run()
@@ -136,11 +126,4 @@ end
 
 pcall(run)
 
-
 -- ════════════════════════════════════════════════════════════════════════════════
--- Aimbot (logic deferred)
--- ════════════════════════════════════════════════════════════════════════════════
--- Magnet (warp), Legitbot (humanized pull) and PSilent move in with a later phase. The
--- menu settings they will read (per-channel FOV/render/color, presets, hitchance) already
--- live in [flux]menu.lua; this lib will consume them via the flux_menu (FM) handle once its
--- logic lands.

@@ -2,15 +2,15 @@
 -- [flux]menu.lua — _VERSION 1.0.2
 -- ════════════════════════════════════════════════════════════════════════════════
 
--- 1.0.0		initial — flux menu data (SPEC + i18n/tips/hides catalogs) as a self-updating
+-- 1.0.2	Security envelope consolidated into apply_security: max_headshot locked at 40 and
+--			detection_delay at 100 (value forced + widget disabled) while Security is on;
+--			removed the now-redundant declarative clamps from the spec
+-- 1.0.1	review cleanup: dropped dead flux_menu_data.lang_widget (engine reads
+--			spec.lang_widget only) and unused spec.langs (engine uses flux_menu_data.langs)
+-- 1.0.0	initial — flux menu data (SPEC + i18n/tips/hides catalogs) as a self-updating
 --			data file, consumed by [flux].lua's menu engine. Pure data + a self-only
 --			updater; no sibling-pull. [flux].lua reads flux_menu_data on on_scripts_loaded,
 --			so hero/utility scripts may append pages to flux_menu_data.spec.pages first.
--- 1.0.1		review cleanup: dropped dead flux_menu_data.lang_widget (engine reads
---			spec.lang_widget only) and unused spec.langs (engine uses flux_menu_data.langs)
--- 1.0.2		Security envelope consolidated into apply_security: max_headshot locked at 40 and
---			detection_delay at 100 (value forced + widget disabled) while Security is on;
---			removed the now-redundant declarative clamps from the spec
 
 -- ════════════════════════════════════════════════════════════════════════════════
 -- Utilities
@@ -24,11 +24,8 @@ local function debugprint(...)
 end
 
 -- ════════════════════════════════════════════════════════════════════════════════
--- Auto Update (self-only)
+-- Auto Update
 -- ════════════════════════════════════════════════════════════════════════════════
--- DATA file, not an entry point: never pulls sibling files. Keeps only ITSELF current
--- against the manifest, so it self-updates inside flux AND standalone. [flux].lua (the
--- entry) downloads it initially via its REQUIREMENTS list.
 
 local _VERSION  = "1.0.2"
 local FILE_NAME = "[flux]menu.lua"
@@ -102,7 +99,7 @@ local function manifest(cb)
 end
 
 -- ────────────────────────────────────────────────────────────────────────────────
--- Update Logic (self-only)
+-- Update Logic
 -- ────────────────────────────────────────────────────────────────────────────────
 
 local function run()
@@ -134,7 +131,6 @@ local function run()
 end
 
 pcall(run)
-
 
 -- ════════════════════════════════════════════════════════════════════════════════
 -- Menu Data
