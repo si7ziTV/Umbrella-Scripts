@@ -1,11 +1,13 @@
 -- ════════════════════════════════════════════════════════════════════════════════
--- [flux]menu.lua — _VERSION 1.0.0
+-- [flux]menu.lua — _VERSION 1.0.1
 -- ════════════════════════════════════════════════════════════════════════════════
 
 -- 1.0.0		initial — flux menu data (SPEC + i18n/tips/hides catalogs) as a self-updating
 --			data file, consumed by [flux].lua's menu engine. Pure data + a self-only
 --			updater; no sibling-pull. [flux].lua reads flux_menu_data on on_scripts_loaded,
 --			so hero/utility scripts may append pages to flux_menu_data.spec.pages first.
+-- 1.0.1		review cleanup: dropped dead flux_menu_data.lang_widget (engine reads
+--			spec.lang_widget only) and unused spec.langs (engine uses flux_menu_data.langs)
 
 -- ════════════════════════════════════════════════════════════════════════════════
 -- Utilities
@@ -25,7 +27,7 @@ end
 -- against the manifest, so it self-updates inside flux AND standalone. [flux].lua (the
 -- entry) downloads it initially via its REQUIREMENTS list.
 
-local _VERSION  = "1.0.0"
+local _VERSION  = "1.0.1"
 local FILE_NAME = "[flux]menu.lua"
 local TAG       = "flux-menu"
 local ROOT      = "https://raw.githubusercontent.com/si7ziTV/Umbrella-Scripts/main"
@@ -140,7 +142,6 @@ pcall(run)
 flux_menu_data = {}
 local LANGS = { "en", "ru" }
 flux_menu_data.langs = LANGS
-flux_menu_data.lang_widget = "lang"
 
 -- ────────────────────────────────────────────────────────────────────────────────
 -- Specification
@@ -370,7 +371,6 @@ flux_menu_data.hides = {
 
 flux_menu_data.spec = {
 	category = { "Flux", "", "Flux" },
-	langs = LANGS,
 	lang_widget = "lang",
 
 	pages = {
